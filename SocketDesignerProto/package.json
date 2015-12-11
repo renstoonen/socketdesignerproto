@@ -1,0 +1,8 @@
+{
+  "description": "Socket Designer generated code prototype",
+  "author": "Rens Toonen",
+  "dependencies": {
+    "express": "^4.13.3",
+    "socket.io": "^1.3.7"
+  }
+}

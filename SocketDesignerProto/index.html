@@ -1,0 +1,45 @@
+<html>
+<head>
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+</head>
+<body>
+  <button id="buttonDisconnectAll" onClick="myMessage()" text="myMessage">
+
+</body>
+<script>
+//instantiate socketio
+var socket = io();
+//YAML = clientevents - connect
+socket.on('connect', function(){
+  console.log('client connect');
+})
+//YAML = clientevents - error
+socket.on('error', function(){
+  console.log('an error happened');
+});
+//YAML = clientevents - disconnect
+socket.on('disconnect', function(){
+  console.log('client disconnect');
+});
+
+//YAML = message
+function myMessage(){
+  socket.emit('myMessage', {'msg': 'this is my message', 'room' : 'room'});
+
+  socket.on('roomMessage', function(message){
+    console.log('ayy lmao');
+  })
+}
+
+//YAML = rooms: true // joining and leaving room
+function joinRoom(roommname){
+  socket.emit('joinroom', {'roomname' : roomname});
+}
+
+function leaveRoom(roomname){
+  socket.emit('leaveroom', {'roomname' : roomname});
+}
+
+</script>
+</html>
