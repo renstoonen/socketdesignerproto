@@ -3,7 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 //YAML = port
-var PORT; //insert variable here
+var PORT = 3000; //insert variable here
 
 //array with object (string, socketobject) used for sending a message to a specific client
 var connectedClients = [];
@@ -12,7 +12,7 @@ app.get("/", function (req, res) {
   res.sendfile(__dirname + "/index.html");
 });
 
-
+//middleware to save the connecting socket in the custom array
 io.use(function(socket, next){
   var namesocketpair = {name: socket.handshake.query.socketname, socket : socket};
   connectedClients.push(namesocketpair);
@@ -54,10 +54,12 @@ io.on('connection', function(client){
   });
 });
 
-http.listen(3000, function(){
+http.listen(PORT, function(){
   console.log('listening on *:3000');
 });
 
+
+//finds a socket in the custom clients array by the given name that is bound to the socket object
 function findSocketByKey(key){
   var returnsocket;
   connectedClients.forEach(function(namesocketpair){

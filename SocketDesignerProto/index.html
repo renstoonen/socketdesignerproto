@@ -25,6 +25,7 @@ socket.on('disconnect', function(){
   console.log('client disconnect');
 });
 
+//used for checking private message
 socket.on('privatemessage', function(msg){
   console.log('this is a private message ' + msg.msg);
 })
@@ -34,16 +35,16 @@ socket.on('privatemessage', function(msg){
 function myBroadcastMessage(){
   socket.emit('myBroadcastMessage', {'msg': 'this is a broadcast message'});
 }
-
+//simple message
 function myMessage(){
   socket.emit('myMessage', {'msg' : 'this is my message'});
 }
-
+//message send to given room
 function myRoomMessage(room){
   joinRoom('testroom')
   socket.emit('myRoomMessage', {'msg' : 'this is a room message', 'room' : room})
 }
-
+//message send to one specific client
 function myPrivateMessage(socketid){
   socket.emit('myPrivateMessage', {'msg' : 'this is my private message', 'socketid' : socketid})
 }
