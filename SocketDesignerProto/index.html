@@ -4,12 +4,14 @@
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 </head>
 <body>
-  <button id="buttonDisconnectAll" onClick="myMessage()" text="myMessage">
-
+  <button id="broadcastMessage" onClick="myBroadcastMessage()" value="broadcast">broadcast</button>
+  <button id="buttonDisconnectAll" onClick="myMessage()" value="myMessage">message</button>
+    <button id="buttonDisconnectAll" onClick="myRoomMessage('testroom')" value="room">room</button>
+      <button id="buttonDisconnectAll" onClick="myPrivateMessage('testsocket')" value="private">private</button>
 </body>
 <script>
 //instantiate socketio
-var socket = io();
+var socket = io({query: "socketname=testsocket"});
 //YAML = clientevents - connect
 socket.on('connect', function(){
   console.log('client connect');
@@ -23,18 +25,32 @@ socket.on('disconnect', function(){
   console.log('client disconnect');
 });
 
-//YAML = message
-function myMessage(){
-  socket.emit('myMessage', {'msg': 'this is my message', 'room' : 'room'});
+socket.on('privatemessage', function(msg){
+  console.log('this is a private message ' + msg.msg);
+})
 
-  socket.on('roomMessage', function(message){
-    console.log('ayy lmao');
-  })
+//YAML =  message
+//variables = name = broadcastMessage , message = "this is a broadcast message", to = "others"
+function myBroadcastMessage(){
+  socket.emit('myBroadcastMessage', {'msg': 'this is a broadcast message'});
+}
+
+function myMessage(){
+  socket.emit('myMessage', {'msg' : 'this is my message'});
+}
+
+function myRoomMessage(room){
+  joinRoom('testroom')
+  socket.emit('myRoomMessage', {'msg' : 'this is a room message', 'room' : room})
+}
+
+function myPrivateMessage(socketid){
+  socket.emit('myPrivateMessage', {'msg' : 'this is my private message', 'socketid' : socketid})
 }
 
 //YAML = rooms: true // joining and leaving room
-function joinRoom(roommname){
-  socket.emit('joinroom', {'roomname' : roomname});
+function joinRoom(roomname){
+    socket.emit('joinroom', {'roomname' : roomname});
 }
 
 function leaveRoom(roomname){
